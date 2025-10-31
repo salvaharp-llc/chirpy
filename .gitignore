@@ -1,4 +1,4 @@
 .vscode/
-*.http
+requests
 .env
 chirpy
