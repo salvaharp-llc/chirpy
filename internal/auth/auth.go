@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/http"
@@ -17,6 +19,8 @@ type TokenType string
 const (
 	// TokenTypeAccess -
 	TokenTypeAccess TokenType = "chirpy-access"
+	// JwtExpiresIn -
+	JwtExpiresIn time.Duration = time.Hour
 )
 
 func HashPassword(password string) (string, error) {
@@ -79,4 +83,10 @@ func GetBearerToken(headers http.Header) (string, error) {
 	}
 
 	return splitAuth[1], nil
+}
+
+func MakeRefreshToken() string {
+	data := make([]byte, 32)
+	rand.Read(data)
+	return hex.EncodeToString(data)
 }
