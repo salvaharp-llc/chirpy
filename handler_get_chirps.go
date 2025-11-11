@@ -6,16 +6,33 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/salvaharp-llc/chirpy/internal/database"
 )
 
 func (cfg *apiConfig) handlerRetrieveChirps(w http.ResponseWriter, r *http.Request) {
-	dbChirps, err := cfg.db.GetChirps(r.Context())
+	authorID := uuid.Nil
+	var err error
+	authorIDString := r.URL.Query().Get("author_id")
+	if authorIDString != "" {
+		authorID, err = uuid.Parse(authorIDString)
+		if err != nil {
+			respondWithError(w, http.StatusBadRequest, "Invalid author ID", err)
+			return
+		}
+	}
+
+	var dbChirps []database.Chirp
+	if authorID != uuid.Nil {
+		dbChirps, err = cfg.db.GetChirpsByUser(r.Context(), authorID)
+	} else {
+		dbChirps, err = cfg.db.GetChirps(r.Context())
+	}
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Error getting the chirps", err)
 		return
 	}
 
-	chirps := []Chirp{}
+	chirps := make([]Chirp, len(dbChirps))
 	for _, chirp := range dbChirps {
 		chirps = append(chirps, Chirp{
 			ID:        chirp.ID,
