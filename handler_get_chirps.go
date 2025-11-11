@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -36,11 +37,11 @@ func (cfg *apiConfig) handlerGetChirps(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dbChirp, err := cfg.db.GetChirp(r.Context(), chirpID)
-	if err == sql.ErrNoRows {
-		respondWithError(w, http.StatusNotFound, "Could not find chirp", err)
-		return
-	}
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			respondWithError(w, http.StatusNotFound, "Could not find chirp", err)
+			return
+		}
 		respondWithError(w, http.StatusInternalServerError, "Error getting the chirp", err)
 		return
 	}

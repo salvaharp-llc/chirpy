@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/salvaharp-llc/chirpy/internal/auth"
@@ -15,10 +14,6 @@ func (cfg *apiConfig) handlerRevoke(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = cfg.db.RevokeRefreshToken(r.Context(), refreshToken)
-	if err == sql.ErrNoRows {
-		respondWithError(w, http.StatusBadRequest, "Could not find refresh token", err)
-		return
-	}
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Could not revoke the refresh token", err)
 		return

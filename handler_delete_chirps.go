@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -28,10 +27,6 @@ func (cfg *apiConfig) handlerDeleteChirps(w http.ResponseWriter, r *http.Request
 	}
 
 	dbChirp, err := cfg.db.GetChirp(r.Context(), chirpID)
-	if err == sql.ErrNoRows {
-		respondWithError(w, http.StatusNotFound, "Could not find chirp", err)
-		return
-	}
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Could not retrieve the chirp", err)
 		return
