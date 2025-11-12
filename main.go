@@ -69,7 +69,7 @@ func main() {
 	mux.HandleFunc("POST /api/revoke", apiCfg.handlerRevoke)
 
 	mux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirps)
-	mux.HandleFunc("GET /api/chirps", apiCfg.handlerRetrieveChirps)
+	mux.HandleFunc("GET /api/chirps", apiCfg.handlerRetrieveChirps) // accepts "user_id" and "sort" query parameters
 	mux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetChirps)
 	mux.HandleFunc("DELETE /api/chirps/{chirpID}", apiCfg.handlerDeleteChirps)
 
