@@ -34,11 +34,11 @@ func main() {
 		log.Fatal("PLATFORM must be set")
 	}
 	JWTSecret := os.Getenv("JWT_SECRET")
-	if platform == "" {
+	if JWTSecret == "" {
 		log.Fatal("JWT_SECRET must be set")
 	}
 	polkaKey := os.Getenv("POLKA_KEY")
-	if platform == "" {
+	if polkaKey == "" {
 		log.Fatal("POLKA_KEY must be set")
 	}
 
